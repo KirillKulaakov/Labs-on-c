@@ -1,0 +1,4 @@
+Kulakov;Kirill;Dmitrievich;student;Russia;Tatarstan;Kazan;Kirpichnikova;11;534
+k;ll;Dmrievich;sdnt;Rua;Tarstan;Kan;Kirpiikova;1;534
+NULLNULLNULL;NULL;NULL;sdunnt;Ra;Tastan;Kan;Kirpi;1;5
+Ilya;stepanov;Aleksandrovich;student of group 34543;Russia;Tatarstan;Kazan;Obshaga;number3;534
