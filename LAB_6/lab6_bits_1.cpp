@@ -7,7 +7,8 @@ void number9(uint64_t number, int bite) {
   number = number << bite;
   uint64_t mask2 = mask >> (64 - bite % 64);
   number |= mask2;
-  cout << "Number : " << number;
+  cout << "Number : " << bitset<64>(number);
+  cout << "\n" << number;
 }
 
 void number15(uint64_t number, int bite, char* argv[]) {
@@ -23,5 +24,6 @@ void number15(uint64_t number, int bite, char* argv[]) {
   else mask = 0ULL << bite; 
   number &= (~mask);
   number |= mask;
-  cout <<  number;
+  cout <<  bitset<64>(number);
+  cout << "\n" << number;
 }

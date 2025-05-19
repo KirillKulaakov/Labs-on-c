@@ -8,12 +8,14 @@
 #define HEADER
 
 
+bool is_cin(const std::istream& stream);
 void result_arr(char* str, char* str_res, int n);
 void delete_memory(char*, char*);
 void delete_memory(char* str1, char* str2);
 
+
 int choose_user(int choose);
-int result(int inp, int outp, int n);
+int result(int inp, int outp);
 int choose_form_input_output();
 int continue_programm(int* exit);
 
@@ -23,7 +25,7 @@ int check_invalide(Type& stream) {
     using namespace pack;
     char ch;
     if constexpr (std::is_same<Type, std::ifstream>::value || std::is_same<Type, std::fstream>::value) {
-        if (!(stream.get(ch))) return SUCCESS;
+        if (!(stream.get(ch)) || ch == '\n') return SUCCESS;
         return ERROR;
     } else {
         if (!(stream.get(ch))) return SUCCESS;
@@ -37,13 +39,20 @@ int check_invalide(Type& stream) {
 
 
 template <typename Type> 
-int input_arr(Type& stream, char* str, int n) {
+int input_arr(Type& stream, char** str, int& n) {
     using namespace pack;
+    if (is_cin(stream)) {
+        std::cout << "PLZ Enter n: ";
+    } 
+    if (!(stream >> n) || n <= 0) return ERROR;
+    if (check_invalide(stream) == ERROR) return ERROR;
     char ch;
     int count = 0;
+    *str = new(std::nothrow) char[n+1];
+    if (*str == nullptr) return ERROR;
     while (count != n) {
         if (!stream.get(ch)) return ERROR;
-        str[count] = ch;      
+        (*str)[count] = ch;      
         count++;
     }
     if (check_invalide(stream) == ERROR) return ERROR;

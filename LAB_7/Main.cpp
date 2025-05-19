@@ -11,15 +11,15 @@ namespace pack{
 int main() {
   using namespace std;
   using namespace pack;
-  //// инициализация head списка
+  // инициализация head списка
   Node<vector<string>>* head = initialization<vector<string>>();
   if (head == nullptr) {
     cerr << RED << BOLD << UNDERLINE << "ERROR with initialization" << RESET <<endl;
     return ERROR;
   }
-  //// прошло ли успешно считывание данных
+  // прошло ли успешно считывание данных
   if (data_reading<vector<string>>(head) != ERROR) {
-    //// цикл программы
+    // цикл программы
     int exit = SUCCESS;
     while (!exit) {
       menu(count_element(head));

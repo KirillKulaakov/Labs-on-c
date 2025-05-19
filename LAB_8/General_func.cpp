@@ -99,7 +99,7 @@ void check_the_element(std::list<Node>& l) {
 
 std::string center(const std::string& text, int width) {
   std::string trimmed;
-  if (text.length() > width) {
+  if (text.length() > static_cast<size_t>(width)) {
     trimmed = text.substr(0, width -3) + "...";
   } else 
     trimmed = text;
@@ -115,7 +115,6 @@ std::string center(const std::string& text, int width) {
 void print(const std::list<Node>& l) {
   using namespace std;
   if (!l.empty()) {
-    int count = 1;
     cout << endl << BOLD;
     for (int i{}; i < 154; i++) {
       if (i == 0 || i == 153) cout << "*";

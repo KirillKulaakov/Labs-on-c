@@ -9,7 +9,7 @@ int continue_programm(int* exit) {
     std::cout << std::endl << "Enter  y - to continue  or  any character - to exit: ";
     char ch;
     std::cin.get(ch);
-    if (check_invalide() == ERROR) {
+    if (check_invalide(std::cin) == ERROR) {
         invalide_value();
         return ERROR;
     }
@@ -28,36 +28,32 @@ int choose_form_input_output() {
     int choose;
     if (!(cin >> choose)) {
         return ERROR;
-    } else if (check_invalide() == ERROR) {return ERROR;}
+    } else if (check_invalide(std::cin) == ERROR) {return ERROR;}
     return choose;
 }
 
 int choose_user(const int& choose) {
     using namespace CONST;
-    int n, inp = 1, outp = 1;
+    int inp = 1, outp = 1;
     std::string name_file_output = FILE_OUTPUT, name_file_input = FILE_INPUT;
-    if (choose >= 1 && choose <= 4) {
-        std::cout << "PLZ ENTER a n: ";
-        if (!(std::cin >> n) || n <= 0) {
-            invalide_value();
-            return ERROR; }
-    } else {
+    if (choose < 1 || choose > 4) {
         invalide_value();
         return ERROR;
-    } if (check_invalide() == ERROR) {
-        invalide_value();
-        return ERROR;
-    } if (choose == 2){
+    }
+    else if (choose == 2){
         inp = 1, outp = 2;
         name_file_output = input_name_of_file_to_output();
-    } else if (choose == 3) {
+    } 
+    else if (choose == 3) {
         inp = 2, outp = 1;
         name_file_input = input_name_of_file_to_input();
-    } else if (choose == 4) {
+    } 
+    else if (choose == 4) {
         inp = 2, outp = 2;
         name_file_input = input_name_of_file_to_input(), name_file_output = input_name_of_file_to_output();
     }
-    if (result(inp, outp, n, name_file_input, name_file_output) == ERROR) return ERROR;
+
+    if (result(inp, outp, name_file_input, name_file_output) == ERROR) return ERROR;
     return SUCCESS;
 }
 
@@ -81,9 +77,10 @@ std::string input_name_of_file_to_input() {
 }
 
 
-int result(int& inp, int& outp,const int& n, std::string& name_file_input, std::string& name_file_output) {
+int result(int& inp, int& outp, std::string& name_file_input, std::string& name_file_output) {
     using namespace CONST;
     std::vector<std::vector<double>> matrix;
+    int n;
     if (inp == 1) { 
         if (enter_matrix_from_console(matrix, n) == ERROR) {
             invalide_value();
@@ -104,21 +101,17 @@ int result(int& inp, int& outp,const int& n, std::string& name_file_input, std::
     return SUCCESS;
 }
 
-int check_invalide() {
-    using namespace CONST;
-    char ch;
-    std::cin.get(ch);
-    while (ch != '\n') {
-        if (ch != ' ') return ERROR;
-        std::cin.get(ch);
-    }
-    return SUCCESS;
-}
 
-int enter_matrix_from_console(std::vector<std::vector<double>>& matrix, const int& n) {
+int enter_matrix_from_console(std::vector<std::vector<double>>& matrix, int& n) {
     using namespace CONST;
     double number;
+    std::cout << "PLZ Enter n: ";
+
+    if (!(std::cin >> n) || n <= 0) return ERROR;
+    else if (check_invalide(std::cin) == ERROR) return ERROR;
+
     std::cout << "Enter a matrix[" << n << "][" << n << "]: ";
+
     for (int i{}; i < n; i++) {
         std::vector<double> numbers;
         for (int j{}; j < n; j++) {
@@ -130,23 +123,27 @@ int enter_matrix_from_console(std::vector<std::vector<double>>& matrix, const in
         }
         matrix.push_back(numbers);
     }
-    if (check_invalide() == ERROR) {
-        invalide_value();
+
+    if (check_invalide(std::cin) == ERROR) {
         return ERROR;
     }
     return SUCCESS;
 }
-
-int enter_matrix_from_file(std::vector<std::vector<double>>& matrix, const int& n, const std::string& name_file_input) {
+int enter_matrix_from_file(std::vector<std::vector<double>>& matrix, int& n, const std::string& name_file_input) 
+{
     using namespace CONST;
     double number;
+    int flag = SUCCESS;
     std::ifstream file(name_file_input);
     if (file.is_open()) {
-        for (int i{}; i < n; i++) {
+        if (!(file >> n) || n <= 0) flag = ERROR;
+        else if (check_invalide(file) == ERROR) flag = ERROR;
+        for (int i{}; i < n && !flag; i++) {
             std::vector<double> numbers;
             for (int j{}; j < n; j++) {
                 if (!(file >> number)) {
                     std::cout << "ERROR with enter a number" << std::endl;
+                    file.close();
                     return ERROR;
                 }
                 numbers.push_back(number);
@@ -158,7 +155,7 @@ int enter_matrix_from_file(std::vector<std::vector<double>>& matrix, const int& 
         return ERROR;
     }
     char ch;
-    while(file.get(ch)) {
+    while(!flag && file.get(ch)) {
         if (ch != '\n' && ch != ' ') {
             std::cout << "ERROR with values in file" << std::endl;
             file.close();
@@ -166,7 +163,7 @@ int enter_matrix_from_file(std::vector<std::vector<double>>& matrix, const int& 
         }
     }
     file.close();
-    return SUCCESS;
+    return flag;
 }
 
 

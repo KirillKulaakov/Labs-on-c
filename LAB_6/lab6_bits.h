@@ -1,8 +1,10 @@
 #include <iostream>
 #include <cmath>
+#include <bitset>
 #include <cstdint>
 
 #ifndef PACK
+
 #define PACK
 
 namespace pack{

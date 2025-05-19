@@ -1,9 +1,15 @@
 #include "378.h"
 #include "378_def.h"
 
+
 namespace CONST {
     const char* FILE_INPUT = "../File_input.txt";
     const char* FILE_OUTPUT = "../File_output.txt";
+}
+
+
+bool is_cin(const std::istream& stream) {
+    return &stream == &std::cin;
 }
 
 
@@ -13,7 +19,7 @@ int continue_programm(int* exit) {
     std::cout << std::endl << "Enter  y - to continue  or  any character - to exit: ";
     char ch;
     std::cin.get(ch);
-    if (check_invalide() == ERROR) return ERROR;
+    if (check_invalide(std::cin) == ERROR) return ERROR;
     if (ch != 'y') *exit = 1;
     return SUCCESS;
 }
@@ -28,19 +34,13 @@ int choose_form_input_output() {
     cout << "4) input values - file      /   output values - file" << endl;
     int choose;
     if (!(cin >> choose)) return ERROR;
-    if (check_invalide() == ERROR) return ERROR;
+    if (check_invalide(std::cin) == ERROR) return ERROR;
     return choose;
 }
 
 int choose_user(int choose) {
     using namespace CONST;
-    int n;
     int inp = 1, outp = 1;
-    if (choose >= 1 && choose <= 4) {
-        std::cout << "PLZ ENTER a n: ";
-        if (!(std::cin >> n) || n <= 0) return ERROR;
-    } else return ERROR;
-    if (check_invalide() == ERROR) return ERROR;
     if (choose == 1) {
         inp = 1, outp = 1; 
     } else if (choose == 2){
@@ -50,25 +50,24 @@ int choose_user(int choose) {
     } else if (choose == 4) {
         inp = 2, outp = 2;
     } else return ERROR;
-    if (result(inp, outp, n) == ERROR) return ERROR;
+
+    if (result(inp, outp) == ERROR) return ERROR;
     return SUCCESS;
 }
 
-int result(int inp, int outp, int n) {
+int result(int inp, int outp) {
     using namespace CONST;
-    float *numbers = new(std::nothrow) float[n];
-    float **matrix = new(std::nothrow) float*[n];
-    if (numbers == nullptr || matrix == nullptr) return ERROR;
-    if (matrix_initialization(matrix, numbers, n) == ERROR) return ERROR;
-    if (inp == 1) { 
-        if (enter_numbers_from_console(numbers, matrix, n) == ERROR) {
-            clear_all(matrix, numbers, n);
-            return ERROR; }
-    } else if (inp == 2) { 
-        if (enter_numbers_from_file(numbers, matrix, n) == ERROR) {
-            clear_all(matrix, numbers, n);
-            return ERROR; }
+    int n, flag = 0;
+    float *numbers = nullptr;
+    float **matrix = nullptr;
+    if (inp == 1) {
+        if (matrix_initialization(std::cin, inp, &matrix, &numbers, n) == ERROR) flag = ERROR;
+    } else if (inp == 2) {
+        std::ifstream file (FILE_INPUT);
+        if (matrix_initialization(file, inp, &matrix, &numbers, n) == ERROR) flag = ERROR;
+        file.close();
     }
+    if (flag == ERROR) return ERROR;
     input_matrix(matrix, numbers, n);
     if (outp == 1) { 
         output_matrix_to_console(matrix, n);
@@ -81,16 +80,6 @@ int result(int inp, int outp, int n) {
     return SUCCESS;
 }
 
-int check_invalide() {
-    using namespace CONST;
-    char ch;
-    std::cin.get(ch);
-    while (ch != '\n') {
-        if (ch != ' ') return ERROR;
-        std::cin.get(ch);
-    }
-    return SUCCESS;
-}
 
 void clear_all(float** matrix, float* numbers, int n) {
     clear_memory(matrix, n);
@@ -106,19 +95,9 @@ void clear_memory(float** ptr, int n) {
     delete[] ptr;
 }
 
-int matrix_initialization(float** matrix, float* numbers, int n) {
-    using namespace CONST;
-    for (int i = 0; i < n; i++) {
-        matrix[i] = new(std::nothrow) float[n];
-        if (matrix[i] == nullptr) {
-            clear_all(matrix, numbers, i);
-            return ERROR;
-        }
-    }
-    return SUCCESS;
-}
 
-int enter_numbers_from_console(float* numbers, float** matrix, int n) {
+
+int enter_numbers_from_console(float* numbers, const int n) {
     using namespace CONST;
     using namespace std;
     cout << "Enter a " << n << " numbers: ";
@@ -129,33 +108,10 @@ int enter_numbers_from_console(float* numbers, float** matrix, int n) {
             return ERROR;
         }
     }
-    return check_invalide();
+    return check_invalide(std::cin);
 }
 
-int enter_numbers_from_file(float* numbers, float** matrix, int n) {
-    using namespace CONST;
-    using namespace std;
-    std::ifstream file(FILE_INPUT);
-    if (file.is_open()) {
-        for (int i = 0; i < n; i++) {
-            if (file.eof()) return ERROR;
-            if (!(file >> numbers[i])) {
-                cout << "incorrect number" << endl;
-                return ERROR;
-            }
-        }
-        char ch;
-        while(file.get(ch)) {
-            if (ch != '\n' && ch != ' ') {
-                std::cout << "ERROR with values in file" << std::endl;
-                file.close();
-                return ERROR;
-            }
-        }
-    } else return ERROR;
-    file.close();
-    return SUCCESS;
-}
+
 
 void input_matrix(float** matrix, float* numbers, int n) {
     double pow_number = 0.0;

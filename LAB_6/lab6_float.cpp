@@ -7,6 +7,8 @@
 
 bool approximatelyEqual(float a, float b, float epsilon);
 bool approximatelyEqualAbsRel(float a, float b, float absEpsilon, float relEpsilon);
+void test_approximatelyEqual(float a, float b, float epsilon);
+void test_approximatelyEqualAbsRel(float a, float b, float absEpsilon, float relEpsilon);
 
 int main(int argc, char* argv[]) {
   using namespace std;
@@ -21,14 +23,12 @@ int main(int argc, char* argv[]) {
     float b = stof(argv[3]);
     if (name_of_functions == "approximatelyEqual" && argc == 5) {
       float epsilon = stof(argv[4]);
-      if (approximatelyEqual(a, b, epsilon)) cout << a << " == " << b << endl;
-      else cout << a << " != " << b << endl;
+      test_approximatelyEqual(a, b, epsilon);
     }
     else if (name_of_functions == "approximatelyEqualAbsRel" && argc == 6){
       float absEpsilon = stof(argv[4]);
       float relEpsilon = stof(argv[5]);
-      if (approximatelyEqualAbsRel(a, b, absEpsilon, relEpsilon)) cout << a << " == " << b << endl;
-      else cout << a << " != " << b << endl;
+      test_approximatelyEqualAbsRel(a, b, absEpsilon, relEpsilon);
     }
     else {
       cerr << "ERROR with name of functions\n";
@@ -47,6 +47,42 @@ int main(int argc, char* argv[]) {
     cerr << "ERROR: Unknown error\n";
     return ERROR;
   }
+}
+
+
+void test_approximatelyEqual(float a, float b, float epsilon) {
+  using namespace std;
+  cout << "approximatelyEqual:" << endl;
+  // сравниваем "a" с b
+  if (approximatelyEqual(a, b, epsilon)) cout << a << " = " << b << "\t\ta = b" << endl;
+  else cout << a << " != " << b << "\t\ta != b" << endl; 
+
+  float copy_a = a;
+  for (int i{}; i < 10; i++) {
+    if (a != 0.0)
+      copy_a -= (a/10.0);
+  }
+  // сравниваем "почти a-1.0" с 0.0
+  if (approximatelyEqual(copy_a, 0.0, epsilon)) cout << copy_a << " = 0.0\t\t" << "~0.0 = 0.0" << endl;
+  else cout << copy_a << " != 0.0\t\t" << "~0.0 != 0.0" << endl;
+}
+
+
+void test_approximatelyEqualAbsRel(float a, float b, float absEpsilon, float relEpsilon) {
+  using namespace std;
+  cout << "approximatelyEqualAbsRel:" << endl;
+  // сравниваем "a" с b
+  if (approximatelyEqualAbsRel(a, b, absEpsilon, relEpsilon)) cout << a << " = " << b << "\t\ta = b" << endl;
+  else cout << a << " != " << b << "\t\ta != b" << endl; 
+
+  float copy_a = a;
+  for (int i{}; i < 10; i++) {
+    if (a != 0.0)
+      copy_a -= (fabs(a)/10.0);
+  }
+  // сравниваем "почти 0.0" с 0.0
+  if (approximatelyEqualAbsRel(copy_a, 0.0, absEpsilon, relEpsilon)) cout << copy_a << " = 0.0\t\t" << "~0.0 = 0.0" << endl;
+  else cout << copy_a << " != 0.0\t\t" << "~0.0 != 0.0" << endl;
 }
 
 

@@ -12,13 +12,13 @@ int main(int argc, char* argv[]) {
   char* endptr;
   uint64_t number = strtoull(argv[1], &endptr, 10);
   if (*endptr != '\0') {
-    cout << "ERROR with get the number\n";
+    cerr << "ERROR with get the number\n";
     return pack::ERROR;
   }
   endptr = nullptr;
   int bite = strtol(argv[2], &endptr, 10);
   if (*endptr != '\0') {
-    cout << "ERROR with get the number\n";
+    cerr << "ERROR with get the number\n";
     return pack::ERROR;
   }
   if (argc == 3) number9(number, bite);

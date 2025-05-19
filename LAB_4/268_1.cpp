@@ -6,40 +6,44 @@ namespace pack {
     const char* FILE_OUTPUT = "../File_output.txt"; 
 }
 
+bool is_cin(const std::istream& stream) {
+    return &stream == &std::cin;
+}
+
 int choose_user(int choose) {
     using namespace pack;
-    int n, inp = 1, outp = 1;
-    if (choose >= 1 && choose <= 4) {
-        std::cout << "PLZ ENTER a n: ";
-        if (!(std::cin >> n) || n <= 0) return ERROR;
-    } else return ERROR;
-    if (check_invalide(std::cin) == ERROR) return ERROR;
+    int inp = 1, outp = 1;
     if (choose == 2){
         inp = 1, outp = 2;
     } else if (choose == 3) {
         inp = 2, outp = 1;
     } else if (choose == 4) {
         inp = 2, outp = 2;
-    }
-    if (result(inp, outp, n) == ERROR) return ERROR;
+    } else if (choose != 1) return ERROR;
+    if (result(inp, outp) == ERROR) return ERROR;
+
     return SUCCESS;
 }
 
-int result(int inp, int outp, int n) {
+int result(int inp, int outp) {
     using namespace pack;
-    char* str = new(std::nothrow) char[n+1];
-    char* str_res = new(std::nothrow) char[n+1];
-    if (str == nullptr || str_res == nullptr) return ERROR;
+    char *str = nullptr, *str_res = nullptr;
+    int n;
     if (inp == 1) { 
-        if (input_arr(std::cin, str, n) == ERROR) {
-            delete_memory(str, str_res);
+        if (input_arr(std::cin, &str, n) == ERROR) {
+            delete[] str;
             return ERROR; }
     } else if (inp == 2) {
         std::ifstream file(FILE_INPUT);
         if (!file.is_open()) return ERROR; 
-        if (input_arr(file, str, n) == ERROR) {
-            delete_memory(str, str_res);
+        if (input_arr(file, &str, n) == ERROR) {
+            delete[] str;
             return ERROR; }
+    }
+    str_res = new(std::nothrow) char[n+1];
+    if (str_res == nullptr) {
+        delete[] str;
+        return ERROR;
     }
     result_arr(str, str_res, n); 
     if (outp == 1) { 

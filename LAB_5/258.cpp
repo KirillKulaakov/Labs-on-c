@@ -10,6 +10,7 @@ int main() {
     while (!exit) {
         int choose = choose_form_input_output();
         if (choose_user(choose) == ERROR) {
+            cout << "ERROR" << endl;
             return ERROR;
         }
         if (choose == 3 || choose == 4) {

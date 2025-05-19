@@ -14,7 +14,7 @@ int continue_programm(int* exit) {
     std::cout << std::endl << "Enter  y - to continue  or  any character - to exit: ";
     char ch;
     std::cin.get(ch);
-    if (check_invalide() == ERROR) {
+    if (check_invalide(std::cin) == ERROR) {
         invalide_value();
         return ERROR;
     }
@@ -33,7 +33,7 @@ int choose_form_input_output() {
     int choose;
     if (!(cin >> choose)) {
         return ERROR;
-    } else if (check_invalide() == ERROR) {
+    } else if (check_invalide(std::cin) == ERROR) {
         invalide_value();
         return ERROR;
     }
@@ -42,38 +42,28 @@ int choose_form_input_output() {
 
 int choose_user(const int& choose) {
     using namespace CONST;
-    int n;
     int inp = 1, outp = 1;
     std::string name_file_output = FILE_OUTPUT, name_file_input = FILE_INPUT;
-    if (choose >= 1 && choose <= 4) {
-        std::cout << "PLZ ENTER a n: ";
-        if (!(std::cin >> n) || n <= 0) {
-            invalide_value();
-            return ERROR;
-        }
-    } else {
-        invalide_value();
-        return ERROR;
-    } if (check_invalide() == ERROR) {
-        invalide_value();
-        return ERROR;
-    } else if (choose == 1) {
-        inp = 1;
-        outp = 1; 
-    } else if (choose == 2){
-        inp = 1;
-        outp = 2;
+
+    if (choose == 1) {
+        inp = 1, outp = 1; 
+    } 
+    else if (choose == 2){
+        inp = 1, outp = 2;
         name_file_output = input_name_of_file_to_output();
-    } else if (choose == 3) {
-        inp = 2;
-        outp = 1;
+    } 
+    else if (choose == 3) {
+        inp = 2, outp = 1;
         name_file_input = input_name_of_file_to_input();
-    } else if (choose == 4) {
-        inp = 2;
-        outp = 2;
+    } 
+    else if (choose == 4) {
+        inp = 2, outp = 2;
         name_file_input = input_name_of_file_to_input(), name_file_output = input_name_of_file_to_output();
-    } else return ERROR;
-    if (result(inp, outp, n, name_file_input, name_file_output) == ERROR) return ERROR;
+    } 
+    else    
+        return ERROR;
+
+    if (result(inp, outp, name_file_input, name_file_output) == ERROR) return ERROR;
     return SUCCESS;
 }
 
@@ -97,14 +87,20 @@ std::string input_name_of_file_to_input() {
     return name_of_file;
 }
 
-int result(int& inp, int& outp, int& n, std::string& name_file_input, std::string& name_file_output) {
+int result(int& inp, int& outp, std::string& name_file_input, std::string& name_file_output) {
     using namespace CONST;
     std::string str;
+    int n;
+    
     if (inp == 1) { 
-        input_from_console_str(str, n);
-    } else if (inp == 2) { 
-        if (input_from_file_str(str, name_file_input) == ERROR) {return ERROR;} 
+        if (input_from_console_str(str, n) == ERROR) 
+            return ERROR;
+    } 
+    else if (inp == 2) { 
+        if (input_from_file_str(str, name_file_input, n) == ERROR) 
+            return ERROR;
     }
+    
     if (check_length_string(str, n) == ERROR) {return ERROR;}
     delete_the_sequence(str);
     if (outp == 1) { 
@@ -115,23 +111,30 @@ int result(int& inp, int& outp, int& n, std::string& name_file_input, std::strin
     return SUCCESS;
 }
 
-void input_from_console_str(std::string& str, const int& n) {
+int input_from_console_str(std::string& str, int& n) {
+    std::cout << "PLZ Enter n: ";
+    if (!(std::cin >> n) || n <= 0) return CONST::ERROR;
+    if (check_invalide(std::cin) == CONST::ERROR) return CONST::ERROR;
     std::cout << "Enter a " << n << " simbols: ";
     std::getline(std::cin, str);
+    return CONST::SUCCESS;
 }
 
-int input_from_file_str(std::string& str, std::string& name_file_input) {
+int input_from_file_str(std::string& str, std::string& name_file_input, int& n) {
     using namespace CONST;
+    int flag = SUCCESS;
     std::ifstream file(name_file_input);
     if (file.is_open()) {
         std::cout << "Read the file" << std::endl;
-        std::getline(file, str);
+        if (!(file >> n) || n <= 0) flag = ERROR; 
+        if (check_invalide(file) == ERROR) flag = ERROR;
+        else std::getline(file, str);
     } else {
         std::cout << "ERROR with open the input file" << std::endl;
-        return ERROR;
+        flag = ERROR;
     }
     file.close();
-    return SUCCESS;
+    return flag;
 }
 
 void output_str_to_console(const std::string& str) {
@@ -159,7 +162,7 @@ int output_str_to_file(const std::string& str, const std::string& name_file_outp
 
 int check_length_string(const std::string& str, const int& n) {
     using namespace CONST;
-    if (str.size() != n) {
+    if (str.size() != static_cast<size_t>(n)) {
         std::cout << "ERROR with length string" << std::endl;
         return ERROR;
     }
