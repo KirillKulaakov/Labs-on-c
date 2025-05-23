@@ -157,7 +157,7 @@ void print(const std::list<Node>& l) {
 
 void default_values(std::list<Node>& l) {
   const Node array[5] {{"Kulakov", "Kirill", "Dmitrievich", "student", "Russia", "Tatarstan", "Kazan", "kirpichnilova", "11", "534"},
-                        {"Arbuzov", "Sanya", "Karazukin", "student", "Russia", "Udmurtia", "Izhevsk", "baranova", "68", "66"},
+                        {"Gubaidullin", "Shamil", "ildarovich", "prepod", "Russia", "Udmurtia", "Izhevsk", "baranova", "998", "50"},
                         {"Vinogradov", "Ilya", "Aleksandrovich", "voditel", "Russia", "Moscow", "Moscow", "autoprospect", "100", "456"},
                         {"Chinazes", "Gubka", "Bob", "cook", "Ocean", "beach", "Bikini Bottom", "street 5", "1", "1"},
                         {"Cherpak", "Sanya", "Sanich", "fireman", "Kazakhstan", "NULL", "Astana", "cherpakova", "12", "999"}};

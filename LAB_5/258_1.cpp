@@ -183,16 +183,6 @@ void delete_the_sequence(std::string& str) {
     }
 }
 
-int check_invalide() {
-    using namespace CONST;
-    char ch;
-    std::cin.get(ch);
-    while (ch != '\n') {
-        if (ch != ' ') return ERROR;
-        std::cin.get(ch);
-    }
-    return SUCCESS;
-}
 
 void invalide_value() {
     std::cout << "Invalide value" << std::endl;

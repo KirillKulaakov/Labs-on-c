@@ -1,4 +1,4 @@
-Kulakov;Kirill;Dmitrievich;student;Russia;Tatarstan;Kazan;Kirpichnikova;11;534
-k;ll;Dmrievich;sdnt;Rua;Tarstan;Kan;Kirpiikova;1;534
-NULLNULLNULL;NULL;NULL;sdunnt;Ra;Tastan;Kan;Kirpi;1;5
-Ilya;stepanov;Aleksandrovich;student of group 34543;Russia;Tatarstan;Kazan;Obshaga;number3;534
+Kulakov;Kirill;Dmitrievich;student;Russia;Tatarstan;Kazan;kirpichnilova;11;534
+Gubaidullin;Shamil;ildarovich;prepod;Russia;Udmurtia;Izhevsk;baranova;68;66
+Vinogradov;Ilya;Aleksandrovich;voditel;Russia;Moscow;Moscow;autoprospect;100;456
+Chinazes;Gubka;Bob;cook;Ocean;beach;Bikini Bottom;street 5;1;1

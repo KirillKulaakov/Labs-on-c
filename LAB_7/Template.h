@@ -141,29 +141,6 @@ Node<T>* delete_the_all_need(Node<T>*& head, int id, const std::string& coincide
 }
 
 
-//- поменять местами элементы в списке
-template <typename T>
-void swap(std::vector<T>& arr, int index1, int index2) {
-  T a = arr[index1];
-  arr[index1] = arr[index2];
-  arr[index2] = a;
-}
-
-
-//- вывести отсортированные значения
-template <typename T>
-void sort_to_console(std::vector<T>& arr) {
-  int count{};
-  for (size_t i{}; i < arr.size(); i++) {
-    std::cout << ++count << ") "; 
-    for (int j{}; j < 10; j++) {
-      std::cout << arr[i][j] << " ";
-    }
-    std::cout << std::endl;
-  }
-}
-
-
 //- количество элементов в списке
 template <typename T>
 int count_element(Node<T>*& head) {
@@ -204,20 +181,8 @@ int actions(Node<T>*& head, int choose_user, int& exit) {
     else if (choose_user == 2) { //// если 2)
       if (id != ERROR) {
         if (head != nullptr) {
-          vector<T> list_of_value; // vector для хранения значений
-          Node<T>* current = head;
-          while (current != nullptr) {
-            list_of_value.push_back(current->value);
-            current = current->next;
-          }
-          //// сортировка пузырьком
-          for (size_t i{}; i < list_of_value.size() - 1; i++) { 
-            if (list_of_value[i][id-1] > list_of_value[i+1][id-1]) {
-              swap<vector<string>>(list_of_value, i, i+1); 
-            }
-          }
-          //// вывод на экран значения
-          sort_to_console<vector<string>>(list_of_value);
+          sort(head, id-1);
+          print(head);
         } else cout << endl << "THE LIST IS EMPTY" << endl;
         if (!flag) animations(200, 7);
       } else flag = ERROR;
@@ -289,5 +254,34 @@ int upload_data(Node<T>*& head) {
   return flag;
 }
 
+
+template <typename T>
+void sort(Node<T>*& head, int id) {
+  Node<T>* current = head;
+  Node<T>* next = current->next;
+  while (next != nullptr) {
+    if (current->value[id] > next->value[id]) {
+      T swap = current->value;
+      current->value = next->value;
+      next->value = swap;
+    }
+    current = next;
+    next = current->next;
+  }
+}
+
+template <typename T>
+void print(Node<T>*& head) {
+  using namespace std;
+  Node<T>* current = head;
+  while (current != nullptr) {
+    for (int i{}; i < 10; i++) {
+      cout << current->value[i];
+      if (i != 9) cout << " | ";
+    }
+    cout << endl;
+    current = current->next;
+  }
+}
 
 #endif

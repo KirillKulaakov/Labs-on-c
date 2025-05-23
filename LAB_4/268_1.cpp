@@ -86,8 +86,6 @@ int continue_programm(int* exit) {
     if (ch != 'y') *exit = 1;
     return SUCCESS;
 }
-
-
 int choose_form_input_output() {
     using namespace std;
     using namespace pack;
