@@ -9,6 +9,7 @@ bool approximatelyEqual(float a, float b, float epsilon);
 bool approximatelyEqualAbsRel(float a, float b, float absEpsilon, float relEpsilon);
 void test_approximatelyEqual(float a, float b, float epsilon);
 void test_approximatelyEqualAbsRel(float a, float b, float absEpsilon, float relEpsilon);
+int check(char* str, size_t& pos);
 
 int main(int argc, char* argv[]) {
   using namespace std;
@@ -19,15 +20,21 @@ int main(int argc, char* argv[]) {
 
   try {
     string name_of_functions = argv[1];
-    float a = stof(argv[2]);
-    float b = stof(argv[3]);
+    size_t pos;
+    float a = stof(argv[2], &pos);
+    if (check(argv[2], pos) == ERROR) return ERROR;
+    float b = stof(argv[3], &pos);
+    if (check(argv[3], pos) == ERROR) return ERROR;
     if (name_of_functions == "approximatelyEqual" && argc == 5) {
-      float epsilon = stof(argv[4]);
+      float epsilon = stof(argv[4], &pos);
+      if (check(argv[4], pos) == ERROR) return ERROR;
       test_approximatelyEqual(a, b, epsilon);
     }
     else if (name_of_functions == "approximatelyEqualAbsRel" && argc == 6){
-      float absEpsilon = stof(argv[4]);
-      float relEpsilon = stof(argv[5]);
+      float absEpsilon = stof(argv[4], &pos);
+      if (check(argv[4], pos) == ERROR) return ERROR;
+      float relEpsilon = stof(argv[5], &pos);
+      if (check(argv[5], pos) == ERROR) return ERROR;
       test_approximatelyEqualAbsRel(a, b, absEpsilon, relEpsilon);
     }
     else {
@@ -60,7 +67,7 @@ void test_approximatelyEqual(float a, float b, float epsilon) {
   float copy_a = a;
   for (int i{}; i < 10; i++) {
     if (a != 0.0)
-      copy_a -= (a/10.0);
+      copy_a -= (fabs(a)/10.0);
   }
   // сравниваем "почти a-1.0" с 0.0
   if (approximatelyEqual(copy_a, 0.0, epsilon)) cout << copy_a << " = 0.0\t\t" << "~0.0 = 0.0" << endl;
@@ -96,4 +103,16 @@ bool approximatelyEqualAbsRel(float a, float b, float absEpsilon, float relEpsil
   if (diff <= absEpsilon)
     return true;
   return diff <= ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * relEpsilon);
+}
+
+int check(char* str, size_t& pos) {
+  std::string input = str;
+  while (pos < input.size() && std::isspace(input[pos])) {
+    pos++;
+  }
+  if (pos != input.size()) {
+    std::cerr << "ERROR: Extra characters in input\n";
+    return ERROR;
+  }
+  return SUCCESS;
 }
